@@ -15,6 +15,33 @@ const getFileAsyncAwait = async (pathToFile) => {
 
 };
 
+const handleError = (err) => {
+    throw new Error(chalk.black.bgMagenta(err));
+};
+
+function cleanArgs(argsArr) {
+    return argsArr.slice(2);
+}
+
+function extractLinks(strText) {
+    const regex = /\[([^\]]*)\]\((https?:\/\/[^$#\s].[^\s]*)\)/gm;
+    const result = regex.exec(strText);
+    console.log(result);
+}
+
+getFileAsyncAwait(inputArgs[0]);
+
+
+
+
+
+
+
+
+
+
+
+
 // Código assíncrono com promise .then .catch
 const getFileAsync = (pathToFile) => {
     const encoding = 'utf8';
@@ -34,23 +61,3 @@ const getFileSync = (pathToFile) => {
         console.log(chalk.green.bgBlue(fileData));
     });
 };
-
-const handleError = (err) => {
-    throw new Error(chalk.black.bgMagenta(err));
-};
-
-function cleanArgs(argsArr) {
-    return argsArr.slice(2);
-}
-
-function extractLinks(strText) {
-    const regex = /\[([^\]]*)\]\((https?:\/\/[^$#\s].[^\s]*)\)/gm;
-    const result = strText.match(regex);
-    console.table(result);
-}
-
-// getFileSync('./arquivos/texto1.md');
-
-// getFileAsync(inputArgs[0]);
-
-getFileAsyncAwait(inputArgs[0]);
