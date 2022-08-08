@@ -3,7 +3,19 @@ const fs = require('fs');
 
 const inputArgs = cleanArgs(process.argv);
 
+// Código assíncrono com Async Await
+const getFileAsyncAwait = async (pathToFile) => {
+    const encoding = 'utf8';
 
+    try {
+        const fileData = await fs.promises.readFile(pathToFile, encoding);
+        console.log(chalk.green.bgBlue(fileData));
+        extractLinks(fileData);
+    } catch (err) { handleError(err); }
+
+};
+
+// Código assíncrono com promise .then .catch
 const getFileAsync = (pathToFile) => {
     const encoding = 'utf8';
     fs.promises
@@ -12,6 +24,7 @@ const getFileAsync = (pathToFile) => {
         .catch(handleError);
 };
 
+// Código síncrono
 const getFileSync = (pathToFile) => {
     const encoding = 'utf8';
     fs.readFile(pathToFile, encoding, (err, fileData) => {
@@ -30,6 +43,14 @@ function cleanArgs(argsArr) {
     return argsArr.slice(2);
 }
 
+function extractLinks(strText) {
+    const regex = /\[([^\]]*)\]\((https?:\/\/[^$#\s].[^\s]*)\)/gm;
+    const result = strText.match(regex);
+    console.table(result);
+}
+
 // getFileSync('./arquivos/texto1.md');
 
-getFileAsync(inputArgs[0]);
+// getFileAsync(inputArgs[0]);
+
+getFileAsyncAwait(inputArgs[0]);
