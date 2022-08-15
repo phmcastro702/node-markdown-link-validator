@@ -4,7 +4,7 @@
   "description": "Lib de node que checa links em textos escritos em markdown(.md)",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "node ./src/cli.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Paulo Castro",

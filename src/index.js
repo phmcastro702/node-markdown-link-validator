@@ -1,16 +1,26 @@
 const chalk = require('chalk');
 const fs = require('fs');
+const path = require('path');
 
-const inputArgs = cleanArgs(process.argv);
 
 // Código assíncrono com Async Await
-const getFileAsyncAwait = async (pathToFile) => {
+const getFileAsyncAwait = async (relativePathToDir) => {
     const encoding = 'utf8';
+    const absolutePathToDir = path.join(__dirname, '..', relativePathToDir);
 
     try {
-        const fileData = await fs.promises.readFile(pathToFile, encoding);
-        console.log(chalk.green.bgBlue(fileData));
-        extractLinks(fileData);
+        const filesInDir = await fs.promises.readdir(absolutePathToDir, { encoding });
+
+        const results = Promise.all(
+            filesInDir.map(
+                async (fileName) => {
+                    const fileTextContent = await fs.promises.readFile(`${absolutePathToDir}/${fileName}`, encoding);
+                    return extractLinks(fileTextContent);
+                }
+            )
+        );
+
+        return results;
     } catch (err) { handleError(err); }
 
 };
@@ -19,17 +29,22 @@ const handleError = (err) => {
     throw new Error(chalk.black.bgMagenta(err));
 };
 
-function cleanArgs(argsArr) {
-    return argsArr.slice(2);
-}
-
 function extractLinks(strText) {
     const regex = /\[([^\]]*)\]\((https?:\/\/[^$#\s].[^\s]*)\)/gm;
-    const result = regex.exec(strText);
-    console.log(result);
+
+    const results = [];
+    let tmp;
+    while ((tmp = regex.exec(strText)) !== null) {
+        results.push({
+            [tmp[1]]: tmp[2]
+        });
+    }
+
+    return results.length === 0 ? 'No links found.' : results;
 }
 
-getFileAsyncAwait(inputArgs[0]);
+
+module.exports = getFileAsyncAwait;
 
 
 
