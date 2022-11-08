@@ -12,7 +12,7 @@ const cleanedArgs = process.argv.slice(2);
         if (cleanedArgs[0] === 'validate') {
             results = await readFile(cleanedArgs[1]);
 
-            console.log('Validate:', validateURLs(results));
+            console.log('Validate:', await validateURLs(results));
             return;
         }
 
